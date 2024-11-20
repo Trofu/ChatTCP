@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="530.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.chat.Controller.ClientController">
+   <children>
+      <HBox alignment="TOP_CENTER">
+         <children>
+            <TextField fx:id="username" prefHeight="24.0" prefWidth="150.0" promptText="Nombre" />
+            <TextField fx:id="ip" layoutX="10.0" layoutY="10.0" prefHeight="24.0" prefWidth="150.0" promptText="Ip" />
+            <TextField fx:id="puerto" layoutX="181.0" layoutY="10.0" prefHeight="24.0" prefWidth="150.0" promptText="Puerto" />
+            <Button fx:id="conection" mnemonicParsing="false" onAction="#onConnectButtonClick" text="Conect" />
+         </children>
+         <VBox.margin>
+            <Insets top="16.0" />
+         </VBox.margin>
+      </HBox>
+      <TextArea fx:id="texto" editable="false" prefHeight="400.0" prefWidth="200.0">
+         <VBox.margin>
+            <Insets left="16.0" right="16.0" top="16.0" />
+         </VBox.margin>
+      </TextArea>
+      <HBox alignment="CENTER" prefHeight="67.0" prefWidth="600.0">
+         <children>
+            <TextField fx:id="mensaje" prefHeight="24.0" prefWidth="381.0" />
+            <Button fx:id="enviar" mnemonicParsing="false" onAction="#onSendButtonClick" text="Send" />
+         </children>
+      </HBox>
+   </children>
+</VBox>
