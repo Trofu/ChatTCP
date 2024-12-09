@@ -1,16 +1,18 @@
-package org.example.chat;
+package org.example.chat.View;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import javax.swing.text.View;
 import java.io.IOException;
 
-public class HelloApplication extends Application {
+public class Cliente extends Application {
+
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/example/chat/Cliente.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 600, 530);
         stage.setTitle("Chat");
         stage.setScene(scene);

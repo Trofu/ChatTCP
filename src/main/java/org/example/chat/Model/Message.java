@@ -1,17 +1,21 @@
 package org.example.chat.Model;
 
-public class Message {
+import java.io.Serializable;
+
+public class Message implements Serializable {
     private String user;
     private String message;
     private double red;
     private double blue;
     private double green;
 
-    public Message(String user, String message, double red, double blue, double green) {
+    public Message(String user, String message) {
         this.user = user;
         this.message = message;
-        this.red = red;
-        this.blue = blue;
-        this.green = green;
+    }
+
+    @Override
+    public String toString() {
+        return user + ": " + message;
     }
 }

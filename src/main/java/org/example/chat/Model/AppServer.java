@@ -1,48 +1,30 @@
 package org.example.chat.Model;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import org.example.chat.Controller.*;
+
+import java.io.*;
+import java.net.ServerSocket;
 import java.net.Socket;
 
-public class AppServer implements Runnable {
+public class AppServer implements Runnable{
 
-    private Socket socketComunicacion;
-
-    public AppServer(Socket socketComunicacion) {
-        this.socketComunicacion = socketComunicacion;
-    }
+    private final static String COD_TEXTO = "UTF-8";
 
     @Override
-    public void run(){
-        try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(socketComunicacion.getInputStream()));
-            PrintWriter pw = new PrintWriter(new BufferedOutputStream(socketComunicacion.getOutputStream()),true);
-
-            String linea,respuesta="";
-            while ((linea=br.readLine())!=null){
-                switch (Integer.parseInt(linea.split(":")[0])){
-                    case 1:
-
-                        break;
-                    case 2:
-
-                        break;
-                    case 3:
-
-                        break;
-                    case 4:
-
-                        break;
-                }
-
-                pw.println(respuesta);
+    public void run() {
+        try (ServerSocket socketServidor = new ServerSocket(50000)) {
+            System.out.println("Servidor establecido");
+            while (true) {
+                // Acepta una conexión de cliente tras otra
+                Socket socketComunicacion = socketServidor.accept();
+                System.out.printf("Cliente conectado desde %s:%d.\n", socketComunicacion.getInetAddress().getHostAddress(), socketComunicacion.getPort());
+                Thread thread = new Thread(new ChanelManager(socketComunicacion));
+                thread.start();
             }
-
-        }catch (Exception e){
-            e.printStackTrace();
+        } catch (IOException ex) {
+            System.out.println("Excepción de E/S");
+            ex.printStackTrace();
+            System.exit(1);
         }
     }
-
 }
