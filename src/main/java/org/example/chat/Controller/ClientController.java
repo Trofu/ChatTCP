@@ -7,7 +7,6 @@ import javafx.scene.control.TextField;
 import org.example.chat.Model.Message;
 import org.example.chat.Model.Reciver;
 
-import java.io.ObjectOutputStream;
 
 
 public class ClientController implements Reciver {
@@ -75,7 +74,6 @@ public class ClientController implements Reciver {
         }
         if (name != null && ip != null && puerto != null) {
             try {
-                communicationManager.setName(name);
                 communicationManager.setSocket(ip, puerto);
                 communicationManager.setReciver(this);
                 new Thread(communicationManager).start();
