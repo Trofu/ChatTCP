@@ -2,8 +2,8 @@ package org.example.chat.Model;
 
 import org.example.chat.Controller.CommunicationManager;
 
-public interface Reciver {
-    void recive(Message message, CommunicationManager communicationManager);
+public interface Receiver {
+    void recive(Message message);
     void remove(CommunicationManager communicationManager);
 
 }

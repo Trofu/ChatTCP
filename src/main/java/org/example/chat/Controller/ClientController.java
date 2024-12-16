@@ -5,11 +5,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import org.example.chat.Model.Message;
-import org.example.chat.Model.Reciver;
+import org.example.chat.Model.Receiver;
+
+import java.net.Socket;
 
 
-
-public class ClientController implements Reciver {
+public class ClientController implements Receiver {
 
     private CommunicationManager communicationManager;
     private String name;
@@ -29,17 +30,14 @@ public class ClientController implements Reciver {
     @FXML
     private Button enviar;
 
-    public ClientController() {
-        this.communicationManager = new CommunicationManager<>();
-    }
+    public ClientController() {}
 
     @Override
-    public void recive(Message message, CommunicationManager communicationManager) {
+    public void recive(Message message) {
         try{
-            if (communicationManager.equals(this.communicationManager)) {
-                if (message != null) {
-                    texto.appendText(message+"\r\n");
-                }
+            if (message != null) {
+                System.out.println(message);
+                texto.appendText(message+"\r\n");
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -53,18 +51,23 @@ public class ClientController implements Reciver {
 
     @FXML
     protected void onSendButtonClick(){
-        if (name!=null) {
+        if (name!=null && communicationManager != null) {
             if (!mensaje.getText().equals("")) {
                 Message message = new Message(name,mensaje.getText());
                 mensaje.setText("");
                 System.out.println(message);
                 communicationManager.send(message);
             }
+        }else {
+            texto.appendText("/*Conectate al servidor.*/");
         }
     }
 
     @FXML
     protected void onConnectButtonClick() {
+        username.setText("Juan");
+        ip.setText("127.0.0.1");
+        puerto.setText("50000");
         name = username.getText();
         String ip = this.ip.getText();
         String puerto = this.puerto.getText();
@@ -74,11 +77,11 @@ public class ClientController implements Reciver {
         }
         if (name != null && ip != null && puerto != null) {
             try {
-                communicationManager.setSocket(ip, puerto);
-                communicationManager.setReciver(this);
-                new Thread(communicationManager).start();
+                int puertoInt = Integer.parseInt(puerto);
+                communicationManager = new CommunicationManager<>(new Socket(ip, puertoInt),this);
                 System.out.println("Conectado");
                 conection.setDisable(true);
+                new Thread(communicationManager).start();
             } catch (Exception e) {
                 System.out.println("Connection Error");
                 conection.setDisable(false);
