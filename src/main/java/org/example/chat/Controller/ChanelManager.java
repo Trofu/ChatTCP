@@ -3,6 +3,7 @@ package org.example.chat.Controller;
 import org.example.chat.Model.Message;
 import org.example.chat.Model.Receiver;
 
+import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,14 +24,23 @@ public class ChanelManager implements Receiver {
 
     @Override
     public void recive(Message message) {
-        for (CommunicationManager communicationManager : this.communicationManagers) {
-            communicationManager.send(message);
+        synchronized (communicationManagers) {
+            for (CommunicationManager communicationManager : new ArrayList<>(communicationManagers)) {
+                communicationManager.send(message);
+            }
         }
     }
 
     @Override
     public void remove(CommunicationManager communicationManager) {
-        communicationManagers.remove(communicationManager);
+        synchronized (communicationManagers) {
+            communicationManagers.remove(communicationManager);
+            try {
+                communicationManager.close();
+            } catch (IOException e) {
+                System.err.println("Error cerrando recursos: " + e.getMessage());
+            }
+        }
     }
 
 }

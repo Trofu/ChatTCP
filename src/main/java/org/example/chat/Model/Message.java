@@ -18,4 +18,12 @@ public class Message implements Serializable {
     public String toString() {
         return user + ": " + message;
     }
+
+    public String getUser() {
+        return user;
+    }
+
+    public String getMessage() {
+        return message;
+    }
 }

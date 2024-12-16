@@ -24,8 +24,8 @@
       </TextArea>
       <HBox alignment="CENTER" prefHeight="67.0" prefWidth="600.0">
          <children>
-            <TextField fx:id="mensaje" prefHeight="24.0" prefWidth="381.0" />
-            <Button fx:id="enviar" mnemonicParsing="false" onAction="#onSendButtonClick" text="Send" />
+            <TextField fx:id="mensaje" editable="false" prefHeight="24.0" prefWidth="381.0" />
+            <Button fx:id="enviar" disable="true" mnemonicParsing="false" onAction="#onSendButtonClick" text="Send" />
          </children>
       </HBox>
    </children>

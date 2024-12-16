@@ -30,13 +30,11 @@ public class ClientController implements Receiver {
     @FXML
     private Button enviar;
 
-    public ClientController() {}
-
     @Override
     public void recive(Message message) {
         try{
             if (message != null) {
-                System.out.println(message);
+                System.out.println("Mensaje recibido: " + message.getMessage());
                 texto.appendText(message+"\r\n");
             }
         }catch (Exception e){
@@ -55,19 +53,25 @@ public class ClientController implements Receiver {
             if (!mensaje.getText().equals("")) {
                 Message message = new Message(name,mensaje.getText());
                 mensaje.setText("");
-                System.out.println(message);
+                System.out.println("Mensaje enviado: " + message.getMessage());
                 communicationManager.send(message);
             }
         }else {
-            texto.appendText("/*Conectate al servidor.*/");
+            texto.appendText("Conectate al servidor.");
         }
     }
 
     @FXML
     protected void onConnectButtonClick() {
-        username.setText("Juan");
-        ip.setText("127.0.0.1");
-        puerto.setText("50000");
+        if (username.getText().isEmpty()) {
+            username.setText("Juan");
+        }
+        if (ip.getText().isEmpty()) {
+            ip.setText("127.0.0.1");
+        }
+        if (puerto.getText().isEmpty()) {
+            puerto.setText("50000");
+        }
         name = username.getText();
         String ip = this.ip.getText();
         String puerto = this.puerto.getText();
@@ -76,11 +80,17 @@ public class ClientController implements Receiver {
             ip = null;
         }
         if (name != null && ip != null && puerto != null) {
+            System.out.println("Conectando al servidor.");
             try {
                 int puertoInt = Integer.parseInt(puerto);
                 communicationManager = new CommunicationManager<>(new Socket(ip, puertoInt),this);
                 System.out.println("Conectado");
                 conection.setDisable(true);
+                enviar.setDisable(false);
+                mensaje.setEditable(true);
+                username.setEditable(false);
+                this.ip.setEditable(false);
+                this.puerto.setEditable(false);
                 new Thread(communicationManager).start();
             } catch (Exception e) {
                 System.out.println("Connection Error");
