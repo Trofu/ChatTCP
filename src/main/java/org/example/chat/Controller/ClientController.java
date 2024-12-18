@@ -34,7 +34,7 @@ public class ClientController implements Receiver {
     public void recive(Message message) {
         try{
             if (message != null) {
-                System.out.println("Mensaje recibido: " + message.getMessage());
+                System.out.println("Mensaje recibido: " + message);
                 texto.appendText(message+"\r\n");
             }
         }catch (Exception e){
@@ -44,7 +44,9 @@ public class ClientController implements Receiver {
 
     @Override
     public void remove(CommunicationManager communicationManager) {
-
+        if (this.communicationManager.equals(communicationManager)) {
+            this.communicationManager = null;
+        }
     }
 
     @FXML
@@ -75,28 +77,37 @@ public class ClientController implements Receiver {
         name = username.getText();
         String ip = this.ip.getText();
         String puerto = this.puerto.getText();
-        if (puerto == null || puerto.isEmpty() || ip == null || ip.isEmpty()) {
-            puerto = null;
-            ip = null;
+        if (puerto == null || puerto.isEmpty() || ip == null || ip.isEmpty() || name == null || name.isEmpty()) {
+            return;
         }
-        if (name != null && ip != null && puerto != null) {
-            System.out.println("Conectando al servidor.");
-            try {
-                int puertoInt = Integer.parseInt(puerto);
-                communicationManager = new CommunicationManager<>(new Socket(ip, puertoInt),this);
-                System.out.println("Conectado");
-                conection.setDisable(true);
-                enviar.setDisable(false);
-                mensaje.setEditable(true);
-                username.setEditable(false);
-                this.ip.setEditable(false);
-                this.puerto.setEditable(false);
-                new Thread(communicationManager).start();
-            } catch (Exception e) {
-                System.out.println("Connection Error");
-                conection.setDisable(false);
-            }
+        System.out.println("Conectando al servidor.");
+        try {
+            texto.setText("");
+            int puertoInt = Integer.parseInt(puerto);
+            communicationManager = new CommunicationManager<>(new Socket(ip, puertoInt),this);
+            System.out.println("Conectado");
+            conection.setDisable(true);
+            enviar.setDisable(false);
+            mensaje.setEditable(true);
+            username.setEditable(false);
+            this.ip.setEditable(false);
+            this.puerto.setEditable(false);
+            new Thread(communicationManager).start();
+        } catch (Exception e) {
+            System.out.println("Connection Error");
+            conection.setDisable(false);
         }
     }
 
+    @Override
+    public String toString() {
+        conection.setDisable(false);
+        enviar.setDisable(true);
+        mensaje.setEditable(false);
+        username.setEditable(true);
+        this.ip.setEditable(true);
+        this.puerto.setEditable(true);
+        texto.appendText("/*  Se ha desconectado el servidor  */.\n");
+        return "Se ha desconectado el servidor.";
+    }
 }

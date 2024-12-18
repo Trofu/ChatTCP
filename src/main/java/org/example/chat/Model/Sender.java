@@ -12,7 +12,7 @@ public interface Sender<T> extends Serializable {
                 out.writeObject(message);
                 out.flush();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
         }).start();
     }

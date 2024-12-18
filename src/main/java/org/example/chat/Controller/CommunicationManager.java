@@ -16,10 +16,12 @@ public class CommunicationManager<T> implements Runnable, Sender<T> {
 
     public CommunicationManager(Socket socket, Receiver receiver){
         try {
-            this.socket = socket;
+            if (socket != null) {
+                this.socket = socket;
+                this.salida = new ObjectOutputStream(this.socket.getOutputStream());
+                this.entrada = new ObjectInputStream(this.socket.getInputStream());
+            }
             this.receiver = receiver;
-            this.salida = new ObjectOutputStream(this.socket.getOutputStream());
-            this.entrada = new ObjectInputStream(this.socket.getInputStream());
         } catch (IOException e) {
             System.err.println("Error al inicializar los flujos: " + e.getMessage());
             e.printStackTrace();
@@ -36,14 +38,14 @@ public class CommunicationManager<T> implements Runnable, Sender<T> {
                     receiver.recive(message);
                 }
             }
-        } catch (IOException | ClassNotFoundException e) {
-            System.err.println("Error al recibir el mensaje: " + e.getMessage());
+        } catch (IOException e) {
+            System.out.println(receiver);
+            receiver.remove(this);
+        } catch (ClassNotFoundException e){
             e.printStackTrace();
-        } finally {
+        }finally {
             try {
-                if (entrada != null) entrada.close();
-                if (salida != null) salida.close();
-                if (socket != null) socket.close();
+                close();
             } catch (IOException e) {
                 System.err.println("Error al cerrar los flujos: " + e.getMessage());
                 e.printStackTrace();
@@ -61,24 +63,8 @@ public class CommunicationManager<T> implements Runnable, Sender<T> {
     }
 
     public void close() throws IOException {
-        if (entrada != null) entrada.close();
-        if (salida != null) salida.close();
-        if (socket != null && !socket.isClosed()) socket.close();
+        if (socket != null && !socket.isClosed())
+            socket.close();
     }
 
-    public Socket getSocket() {
-        return socket;
-    }
-
-    public Receiver getReceiver() {
-        return receiver;
-    }
-
-    public ObjectInputStream getEntrada() {
-        return entrada;
-    }
-
-    public ObjectOutputStream getSalida() {
-        return salida;
-    }
 }
